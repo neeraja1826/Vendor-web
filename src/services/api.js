@@ -491,6 +491,15 @@ export const vendorApi = {
       }
     ),
 
+  getProductReviews: (productId) =>
+    request(
+      `/reviews/product/${encodeURIComponent(productId)}`,
+      {
+        method: "GET",
+      },
+      false
+    ),
+
   createProduct: (payload) =>
     request(
       "/vendor/products",

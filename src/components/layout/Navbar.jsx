@@ -16,6 +16,7 @@ import {
   Package,
   Search,
   ShoppingBag,
+  Star,
   Truck,
   Store,
   UserRound,
@@ -63,6 +64,11 @@ const pageDetails = [
     path: "/products",
     title: "Products",
     subtitle: "Manage your product catalogue",
+  },
+  {
+    path: "/reviews",
+    title: "Reviews & Ratings",
+    subtitle: "Read customer feedback on your products",
   },
   {
     path: "/inventory",
@@ -127,6 +133,12 @@ const quickLinks = [
     path: "/products",
     pageKey: "products",
     icon: Package,
+  },
+  {
+    label: "Reviews",
+    path: "/reviews",
+    pageKey: "products",
+    icon: Star,
   },
   {
     label: "Orders",

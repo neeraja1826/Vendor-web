@@ -1,3 +1,5 @@
+import { lazy, Suspense } from "react";
+
 import {
   Navigate,
   Route,
@@ -11,29 +13,26 @@ import PermissionRoute from "./routes/PermissionRoute";
 
 import { useAuth } from "./context/AuthContext";
 
-import LoginPage from "./pages/auth/LoginPage";
-import AcceptInvitePage from "./pages/auth/AcceptInvitePage";
+import LoadingScreen from "./components/common/LoadingScreen";
 
-import PendingApprovalPage from "./pages/PendingApprovalPage";
-import DashboardPage from "./pages/DashboardPage";
-
-import ProductsPage from "./pages/ProductsPage";
-import AddProductPage from "./pages/AddProductPage";
-import ProductVariantsPage from "./pages/ProductVariantsPage";
-import ProductImagesPage from "./pages/ProductImagesPage";
-
-import InventoryPage from "./pages/InventoryPage";
-import OrdersPage from "./pages/OrdersPage";
-import ShippingPage from "./pages/ShippingPage";
-import ReturnsPage from "./pages/ReturnsPage";
-
-import EarningsPage from "./pages/EarningsPage";
-import PayoutsPage from "./pages/PayoutsPage";
-
-import ProfilePage from "./pages/ProfilePage";
-import TeamPage from "./pages/TeamPage";
-
-import NotificationsPage from "./pages/NotificationsPage";
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const AcceptInvitePage = lazy(() => import("./pages/auth/AcceptInvitePage"));
+const PendingApprovalPage = lazy(() => import("./pages/PendingApprovalPage"));
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const ProductsPage = lazy(() => import("./pages/ProductsPage"));
+const ReviewsPage = lazy(() => import("./pages/ReviewsPage"));
+const AddProductPage = lazy(() => import("./pages/AddProductPage"));
+const ProductVariantsPage = lazy(() => import("./pages/ProductVariantsPage"));
+const ProductImagesPage = lazy(() => import("./pages/ProductImagesPage"));
+const InventoryPage = lazy(() => import("./pages/InventoryPage"));
+const OrdersPage = lazy(() => import("./pages/OrdersPage"));
+const ShippingPage = lazy(() => import("./pages/ShippingPage"));
+const ReturnsPage = lazy(() => import("./pages/ReturnsPage"));
+const EarningsPage = lazy(() => import("./pages/EarningsPage"));
+const PayoutsPage = lazy(() => import("./pages/PayoutsPage"));
+const ProfilePage = lazy(() => import("./pages/ProfilePage"));
+const TeamPage = lazy(() => import("./pages/TeamPage"));
+const NotificationsPage = lazy(() => import("./pages/NotificationsPage"));
 
 /* ============================================================
    DEFAULT LANDING PAGE
@@ -124,7 +123,8 @@ function NoAccessPage() {
 
 export default function App() {
   return (
-    <Routes>
+    <Suspense fallback={<LoadingScreen />}>
+      <Routes>
 
       {/* PUBLIC ROUTES */}
 
@@ -178,6 +178,10 @@ export default function App() {
             <Route
               path="/products"
               element={<ProductsPage />}
+            />
+            <Route
+              path="/reviews"
+              element={<ReviewsPage />}
             />
           </Route>
 
@@ -342,6 +346,7 @@ export default function App() {
         </Route>
       </Route>
 
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 }

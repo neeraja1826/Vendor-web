@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 
 import { returnsApi } from "../services/returnsApi";
+import CalendarDatePicker from "../components/CalendarDatePicker.jsx";
 
 import "./returns.css";
 
@@ -487,6 +488,8 @@ function ActionForm({
 
   const [pickupDate, setPickupDate] =
     useState("");
+  const [pickupDateError, setPickupDateError] =
+    useState("");
 
   const [courier, setCourier] =
     useState("");
@@ -507,6 +510,12 @@ function ActionForm({
     event.preventDefault();
 
     if (busy) {
+      return;
+    }
+
+    setPickupDateError("");
+    if (scheduling && !pickupDate) {
+      setPickupDateError("Please select a pickup date and time.");
       return;
     }
 
@@ -566,19 +575,17 @@ function ActionForm({
       {scheduling && (
         <>
           <div className="returns-form-grid">
-            <label>
-              Pickup Date & Time
-
-              <input
-                type="datetime-local"
-                value={pickupDate}
-                onChange={(event) =>
-                  setPickupDate(event.target.value)
-                }
-                disabled={busy}
-                required
-              />
-            </label>
+            <CalendarDatePicker
+              label="Pickup Date & Time"
+              value={pickupDate}
+              onChange={(value) => {
+                setPickupDate(value);
+                setPickupDateError("");
+              }}
+              includeTime
+              disabled={busy}
+              required
+            />
 
             <label>
               Courier Name
@@ -645,6 +652,13 @@ function ActionForm({
             </div>
           )}
         </>
+      )}
+
+      {pickupDateError && (
+        <div className="returns-error" role="alert">
+          <AlertCircle size={17} />
+          {pickupDateError}
+        </div>
       )}
 
       <label className="returns-notes-field">

@@ -221,6 +221,7 @@ export default function DashboardPage() {
   const {
     vendor,
     syncVendorProfile,
+    canAccess,
   } = useAuth();
 
   const [dashboard, setDashboard] = useState(null);
@@ -424,6 +425,22 @@ export default function DashboardPage() {
   const paidPayout = asNumber(
     stats.earnings?.paid_payout
   );
+
+  const canViewProducts = canAccess("products");
+  const canCreateProducts = canAccess("productCreate");
+  const canViewOrders = canAccess("orders");
+  const canViewInventory = canAccess("inventory");
+  const canViewEarnings = canAccess("earnings");
+  const canViewPayouts = canAccess("payouts");
+  const canViewProfile = canAccess("profile");
+
+  const hasActionableCounts =
+    (canViewOrders && pendingOrderItems !== null) ||
+    (canViewProducts && draftProducts !== null);
+
+  const hasPendingActions =
+    (canViewOrders && pendingOrderItems > 0) ||
+    (canViewProducts && draftProducts > 0);
 
 
   /* ==========================================================
@@ -682,64 +699,129 @@ export default function DashboardPage() {
           BUSINESS METRICS
       ====================================================== */}
 
+      {hasActionableCounts && (
+        <section
+          className="avd-panel"
+          aria-label="Next actions"
+        >
+          <div className="avd-panel-heading">
+            <div>
+              <span className="avd-eyebrow">
+                NEXT ACTIONS
+              </span>
+
+              <h3>
+                {hasPendingActions
+                  ? "Needs your attention"
+                  : "You're all caught up"}
+              </h3>
+
+              <p>
+                {hasPendingActions
+                  ? "Start with the items that need your attention."
+                  : "No pending actions based on your current summary."}
+              </p>
+            </div>
+
+            <span className="avd-panel-heading-icon">
+              <Clock3 size={19} />
+            </span>
+          </div>
+
+          {hasPendingActions && (
+            <div className="avd-actions">
+              {canViewOrders && pendingOrderItems > 0 && (
+                <QuickAction
+                  icon={ShoppingBag}
+                  title="Process pending order items"
+                  description={`${formatNumber(pendingOrderItems)} awaiting processing`}
+                  to="/orders"
+                />
+              )}
+
+              {canViewProducts && draftProducts > 0 && (
+                <QuickAction
+                  icon={Package}
+                  title="Continue product drafts"
+                  description={`${formatNumber(draftProducts)} drafts in your catalogue`}
+                  to="/products"
+                />
+              )}
+            </div>
+          )}
+        </section>
+      )}
+
       <section
         className="avd-metrics"
         aria-label="Business statistics"
       >
 
-        <MetricCard
-          icon={Package}
-          label="Total Products"
-          value={formatNumber(productTotal)}
-          description="Catalogue products"
-          to="/products"
-          tone="green"
-        />
+        {canViewProducts && (
+          <>
+            <MetricCard
+              icon={Package}
+              label="Total Products"
+              value={formatNumber(productTotal)}
+              description="Catalogue products"
+              to="/products"
+              tone="green"
+            />
 
-        <MetricCard
-          icon={PackageCheck}
-          label="Active Products"
-          value={formatNumber(activeProducts)}
-          description="Active listings"
-          to="/products"
-          tone="sage"
-        />
+            <MetricCard
+              icon={PackageCheck}
+              label="Active Products"
+              value={formatNumber(activeProducts)}
+              description="Active listings"
+              to="/products"
+              tone="sage"
+            />
+          </>
+        )}
 
-        <MetricCard
-          icon={ShoppingBag}
-          label="Total Orders"
-          value={formatNumber(totalOrders)}
-          description="Customer orders"
-          to="/orders"
-          tone="cream"
-        />
+        {canViewOrders && (
+          <>
+            <MetricCard
+              icon={ShoppingBag}
+              label="Total Orders"
+              value={formatNumber(totalOrders)}
+              description="Customer orders"
+              to="/orders"
+              tone="cream"
+            />
 
-        <MetricCard
-          icon={Clock3}
-          label="Pending Order Items"
-          value={formatNumber(pendingOrderItems)}
-          description="Awaiting processing"
-          to="/orders"
-          tone="gold"
-        />
+            <MetricCard
+              icon={Clock3}
+              label="Pending Order Items"
+              value={formatNumber(pendingOrderItems)}
+              description="Awaiting processing"
+              to="/orders"
+              tone="gold"
+            />
+          </>
+        )}
 
-        <MetricCard
-          icon={TrendingUp}
-          label="Ledger Total"
-          value={formatCurrency(ledgerTotal)}
-          description="Recorded ledger amount"
-          to="/earnings"
-          tone="sage"
-        />
+        {canViewEarnings && (
+          <MetricCard
+            icon={TrendingUp}
+            label="Ledger Total"
+            value={formatCurrency(ledgerTotal)}
+            description="Recorded ledger amount"
+            to="/earnings"
+            tone="sage"
+          />
+        )}
 
-        <MetricCard
-          icon={Wallet}
-          label="Pending Payouts"
-          value={formatCurrency(pendingPayout)}
-          description="Awaiting settlement"
-          to="/payouts"
-          tone="green"
-        />
+        {canViewPayouts && (
+          <MetricCard
+            icon={Wallet}
+            label="Pending Payouts"
+            value={formatCurrency(pendingPayout)}
+            description="Awaiting settlement"
+            to="/payouts"
+            tone="green"
+          />
+        )}
       </section>
 
 
@@ -751,6 +833,10 @@ export default function DashboardPage() {
 
         {/* QUICK ACTIONS */}
 
+        {(canCreateProducts ||
+          canViewOrders ||
+          canViewInventory ||
+          canViewEarnings) && (
         <article className="avd-panel">
           <div className="avd-panel-heading">
             <div>
@@ -774,35 +860,44 @@ export default function DashboardPage() {
 
           <div className="avd-actions">
 
-            <QuickAction
-              icon={Plus}
-              title="Add New Product"
-              description="Create a catalogue listing"
-              to="/products/new"
-            />
+            {canCreateProducts && (
+              <QuickAction
+                icon={Plus}
+                title="Add New Product"
+                description="Create a catalogue listing"
+                to="/products/new"
+              />
+            )}
 
-            <QuickAction
-              icon={ShoppingBag}
-              title="Manage Orders"
-              description="Review customer orders"
-              to="/orders"
-            />
+            {canViewOrders && (
+              <QuickAction
+                icon={ShoppingBag}
+                title="Manage Orders"
+                description="Review customer orders"
+                to="/orders"
+              />
+            )}
 
-            <QuickAction
-              icon={Warehouse}
-              title="Manage Inventory"
-              description="Update stock and availability"
-              to="/inventory"
-            />
+            {canViewInventory && (
+              <QuickAction
+                icon={Warehouse}
+                title="Manage Inventory"
+                description="Update stock and availability"
+                to="/inventory"
+              />
+            )}
 
-            <QuickAction
-              icon={IndianRupee}
-              title="Earnings & Payouts"
-              description="Review financial activity"
-              to="/earnings"
-            />
+            {canViewEarnings && (
+              <QuickAction
+                icon={IndianRupee}
+                title="Review Earnings"
+                description="Review financial activity"
+                to="/earnings"
+              />
+            )}
           </div>
         </article>
+        )}
 
 
         {/* STORE HEALTH */}
@@ -841,44 +936,50 @@ export default function DashboardPage() {
               }
             />
 
-            <StatusRow
-              icon={Package}
-              label="Product catalogue"
-              value={
-                productTotal === null
-                  ? "Unavailable"
-                  : `${formatNumber(productTotal)} total products`
-              }
-              state={
-                productTotal === null
-                  ? "neutral"
-                  : productTotal > 0
-                    ? "good"
-                    : "attention"
-              }
-            />
+            {canViewProducts && (
+              <>
+                <StatusRow
+                  icon={Package}
+                  label="Product catalogue"
+                  value={
+                    productTotal === null
+                      ? "Unavailable"
+                      : `${formatNumber(productTotal)} total products`
+                  }
+                  state={
+                    productTotal === null
+                      ? "neutral"
+                      : productTotal > 0
+                        ? "good"
+                        : "attention"
+                  }
+                />
 
-            <StatusRow
-              icon={PackageCheck}
-              label="Draft products"
-              value={
-                draftProducts === null
-                  ? "Unavailable"
-                  : `${formatNumber(draftProducts)} drafts`
-              }
-              state="neutral"
-            />
+                <StatusRow
+                  icon={PackageCheck}
+                  label="Draft products"
+                  value={
+                    draftProducts === null
+                      ? "Unavailable"
+                      : `${formatNumber(draftProducts)} drafts`
+                  }
+                  state="neutral"
+                />
+              </>
+            )}
 
-            <StatusRow
-              icon={ShoppingBag}
-              label="Order items"
-              value={
-                totalOrderItems === null
-                  ? "Unavailable"
-                  : `${formatNumber(totalOrderItems)} total items`
-              }
-              state="neutral"
-            />
+            {canViewOrders && (
+              <StatusRow
+                icon={ShoppingBag}
+                label="Order items"
+                value={
+                  totalOrderItems === null
+                    ? "Unavailable"
+                    : `${formatNumber(totalOrderItems)} total items`
+                }
+                state="neutral"
+              />
+            )}
           </div>
         </article>
       </section>
@@ -888,6 +989,7 @@ export default function DashboardPage() {
           FINANCIAL OVERVIEW
       ====================================================== */}
 
+      {(canViewEarnings || canViewPayouts) && (
       <section className="avd-finance-panel">
 
         <div className="avd-finance-heading">
@@ -905,58 +1007,74 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <Link
-            to="/payouts"
-            className="avd-text-link"
-          >
-            View Payouts
-            <ArrowRight size={16} />
-          </Link>
+          {canViewPayouts ? (
+            <Link
+              to="/payouts"
+              className="avd-text-link"
+            >
+              View Payouts
+              <ArrowRight size={16} />
+            </Link>
+          ) : (
+            <Link
+              to="/earnings"
+              className="avd-text-link"
+            >
+              View Earnings
+              <ArrowRight size={16} />
+            </Link>
+          )}
         </div>
 
         <div className="avd-finance-grid">
 
-          <div className="avd-finance-item">
-            <span>
-              Pending Settlement
-            </span>
+          {canViewPayouts && (
+            <>
+              <div className="avd-finance-item">
+                <span>
+                  Pending Settlement
+                </span>
 
-            <strong>
-              {formatCurrency(pendingPayout)}
-            </strong>
+                <strong>
+                  {formatCurrency(pendingPayout)}
+                </strong>
 
-            <small>
-              Awaiting payout
-            </small>
-          </div>
+                <small>
+                  Awaiting payout
+                </small>
+              </div>
 
-          <div className="avd-finance-item">
-            <span>
-              Paid Settlements
-            </span>
+              <div className="avd-finance-item">
+                <span>
+                  Paid Settlements
+                </span>
 
-            <strong>
-              {formatCurrency(paidPayout)}
-            </strong>
+                <strong>
+                  {formatCurrency(paidPayout)}
+                </strong>
 
-            <small>
-              Completed payouts
-            </small>
-          </div>
+                <small>
+                  Completed payouts
+                </small>
+              </div>
+            </>
+          )}
 
-          <div className="avd-finance-item">
-            <span>
-              Ledger Total
-            </span>
+          {canViewEarnings && (
+            <div className="avd-finance-item">
+              <span>
+                Ledger Total
+              </span>
 
-            <strong>
-              {formatCurrency(ledgerTotal)}
-            </strong>
+              <strong>
+                {formatCurrency(ledgerTotal)}
+              </strong>
 
-            <small>
-              Recorded ledger entries
-            </small>
-          </div>
+              <small>
+                Recorded ledger entries
+              </small>
+            </div>
+          )}
         </div>
 
         <p className="avd-finance-note">
@@ -964,6 +1082,7 @@ export default function DashboardPage() {
           Ledger entries may include multiple transaction types.
         </p>
       </section>
+      )}
 
 
       {/* ======================================================
@@ -986,10 +1105,12 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <Link to="/profile">
-          Business Profile
-          <ChevronRight size={16} />
-        </Link>
+        {canViewProfile && (
+          <Link to="/profile">
+            Business Profile
+            <ChevronRight size={16} />
+          </Link>
+        )}
       </section>
 
     </div>

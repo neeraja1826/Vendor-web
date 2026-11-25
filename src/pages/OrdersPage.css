@@ -530,9 +530,10 @@
 
 .avo-order-card > div:nth-child(2) {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
   justify-content: flex-end;
-  gap: 17px;
+  gap: 7px;
   min-width: 0;
 }
 
@@ -541,6 +542,35 @@
   font-size: 13px;
   font-weight: 800;
   white-space: nowrap;
+}
+
+.avo-payment-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid #dfe8df;
+  border-radius: 20px;
+  background: #f5f7f4;
+  color: #64746a;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.avo-payment-status--paid,
+.avo-payment-status--succeeded,
+.avo-payment-status--successful {
+  border-color: #cce6d0;
+  background: #edf8ef;
+  color: #267343;
+}
+
+.avo-payment-status--failed,
+.avo-payment-status--refunded,
+.avo-payment-status--cancelled {
+  border-color: #efd1cd;
+  background: #fff3f1;
+  color: #a64b40;
 }
 
 .avo-order-card > svg {

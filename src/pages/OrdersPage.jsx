@@ -1679,6 +1679,7 @@ export default function OrdersPage() {
           order.order_number,
           order.order_id,
           order.payment_method,
+          order.payment_status,
         ]
           .filter(Boolean)
           .join(" ")
@@ -2041,6 +2042,14 @@ export default function OrdersPage() {
                         order.currency
                       )}
                     </strong>
+
+                    <span
+                      className={`avo-payment-status avo-payment-status--${statusOf(
+                        order.payment_status
+                      )}`}
+                    >
+                      Payment: {words(order.payment_status)}
+                    </span>
                   </div>
 
                   <ArrowRight size={17} />

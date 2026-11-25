@@ -5,6 +5,7 @@ import {
   Package,
   Warehouse,
   ShoppingBag,
+  Star,
   Truck,
   RotateCcw,
   IndianRupee,
@@ -49,6 +50,12 @@ const mainNavigation = [
     path: "/products",
     pageKey: "products",
     icon: Package,
+  },
+  {
+    label: "Reviews & Ratings",
+    path: "/reviews",
+    pageKey: "products",
+    icon: Star,
   },
   {
     label: "Orders",

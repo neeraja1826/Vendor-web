@@ -1,0 +1,243 @@
+.vendor-reviews-page {
+  display: grid;
+  gap: 18px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 12px 0 36px;
+  color: #263d30;
+}
+
+.vendor-reviews-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.vendor-reviews-eyebrow {
+  color: #66816d;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.vendor-reviews-header h1 {
+  margin: 6px 0;
+  color: #173e32;
+  font: 600 clamp(25px, 3vw, 34px) Georgia, serif;
+}
+
+.vendor-reviews-header p {
+  margin: 0;
+  color: #7d8d80;
+  font-size: 13px;
+}
+
+.vendor-reviews-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #dce7da;
+  border-radius: 9px;
+  background: #fff;
+  color: #356345;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.vendor-reviews-refresh:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.vendor-reviews-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.vendor-reviews-summary > div,
+.vendor-review-card,
+.vendor-reviews-empty {
+  border: 1px solid #e3e9e0;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(29, 65, 43, 0.035);
+}
+
+.vendor-reviews-summary > div {
+  display: grid;
+  gap: 8px;
+  padding: 17px 19px;
+}
+
+.vendor-reviews-summary span {
+  color: #7d8d80;
+  font-size: 12px;
+}
+
+.vendor-reviews-summary strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #244c36;
+  font-size: 22px;
+}
+
+.vendor-reviews-summary strong svg,
+.vendor-review-stars {
+  color: #d29d39;
+}
+
+.vendor-reviews-search input {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 13px;
+  border: 1px solid #dfe7df;
+  border-radius: 9px;
+  background: #fff;
+  color: #263d30;
+  font: inherit;
+  font-size: 13px;
+}
+
+.vendor-reviews-list {
+  display: grid;
+  gap: 12px;
+}
+
+.vendor-review-card {
+  display: grid;
+  gap: 12px;
+  padding: 17px 19px;
+}
+
+.vendor-review-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.vendor-review-product {
+  color: #66816d;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.vendor-review-card h2 {
+  margin: 5px 0 0;
+  color: #244c36;
+  font-size: 15px;
+}
+
+.vendor-review-rating,
+.vendor-review-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.vendor-review-rating {
+  flex-shrink: 0;
+  color: #53665a;
+  font-size: 12px;
+}
+
+.vendor-review-text {
+  margin: 0;
+  color: #46564b;
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.vendor-review-image-link {
+  width: fit-content;
+}
+
+.vendor-review-image-link img {
+  display: block;
+  width: 104px;
+  height: 104px;
+  border-radius: 9px;
+  object-fit: cover;
+}
+
+.vendor-review-date {
+  color: #8a998e;
+  font-size: 11px;
+}
+
+.vendor-reviews-empty {
+  padding: 28px 18px;
+  color: #7d8d80;
+  font-size: 13px;
+  text-align: center;
+}
+
+.vendor-reviews-error {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #efd1cd;
+  border-radius: 9px;
+  background: #fff3f1;
+  color: #974d43;
+  font-size: 12px;
+}
+
+.vendor-reviews-error button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.vendor-reviews-page .is-spinning {
+  animation: vendor-reviews-spin 1s linear infinite;
+}
+
+.vendor-reviews-page .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes vendor-reviews-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .vendor-reviews-page {
+    padding-top: 4px;
+  }
+
+  .vendor-reviews-header {
+    align-items: flex-start;
+  }
+
+  .vendor-reviews-header p {
+    max-width: 270px;
+  }
+
+  .vendor-reviews-summary > div {
+    padding: 14px;
+  }
+
+  .vendor-review-card {
+    padding: 14px;
+  }
+}
